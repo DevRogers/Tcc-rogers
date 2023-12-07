@@ -1,0 +1,21 @@
+
+  {
+    "version": 2,
+    "builds": [
+      {
+        "src": "index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      { "handle": "filesystem" },
+      { "src": "/(.*)", "dest": "/index.js" }
+    ],
+    "env": {
+        "DB_HOST": "localhost",
+        "SECRET": "sdnfsd7845334vjf87347&5kjsdf4758&*",
+        "DB_NAME": "bancoTcc",
+        "DB_USER": "fabioRoger",
+        "DB_PASSWORD": "Abcd&123"
+      }
+  }
