@@ -233,7 +233,7 @@ app.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
 
 //Cadastro e listagem de pessoas
 app.get("/pessoas/",async function(req, res) {
-  const resultado = await pessoa.pessoa.findAll()
+  const resultado = await pessoas.Pessoas.findAll()
   res.json(resultado);
 })
 
@@ -257,7 +257,7 @@ app.get("/pessoas/name/:usuarioId",async function(req, res) {
   res.json(resultado);
 })
 app.post("/pessoas/",async function(req,res){
-  const resultado = await pessoa.pessoa.create({
+  const resultado = await pessoas.Pessoas.create({
       name:req.body.name,
       telefone:req.body.telefone,
       cidade:req.body.cidade,
