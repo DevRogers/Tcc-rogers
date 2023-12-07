@@ -7,6 +7,7 @@ select * from usuarios;
 drop table usuarios;
 truncate usuarios;
 drop table pessoas;
+
 create table pessoas(
 id int primary key auto_increment,
 nome varchar(100),
