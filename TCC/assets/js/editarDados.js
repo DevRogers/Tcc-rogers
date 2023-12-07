@@ -1,6 +1,6 @@
 
 
-const URL_USER = "https://localhost:3004/auth/user/"
+const URL_USER = "http://localhost:3005/auth/user/"
 var usuarioId = localStorage.getItem("id")
 lerParametros();
 function lerParametros(){

@@ -1,4 +1,4 @@
-const URL_AUTH = "https://localhost:3004/auth/user/"
+const URL_AUTH = "http://localhost:3005/auth/user/"
 
 var botaoCadastrar = document.getElementById("entrarLog")
 botaoCadastrar.addEventListener("click",()=>{

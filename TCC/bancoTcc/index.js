@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const express2 = require('express')
 const bodyParser = require('body-parser')
 var mysql = require('mysql')
 
@@ -15,7 +14,6 @@ const banco = require("./banco")
 const Usuario = require("./Usuario")
 const app = express()
 const jsonParser = bodyParser.json()
-const app2 = express2();
 
 
 const veiculos = require("./veiculos")
@@ -23,13 +21,17 @@ const pessoas = require("./pessoas")
 const historico = require("./historico")
 
 
-app.listen(3005)
+
 app.use(express.json())
-const portaServidor = process.env.PORT || 3004;
-app2.use(express2.json())
-app2.use(cookieParser())
+app.use(cookieParser())
+app.use(cors());
 banco.conexao.sync( function(){
   console.log("Banco de dados conectado.");
+})
+
+const PORTA = 3005
+app.listen(PORTA,function(){
+  console.log("Servidor rodando na porta " + PORTA );
 })
 
 var con = mysql.createConnection({
@@ -43,17 +45,11 @@ var con = mysql.createConnection({
 //     if (err) throw err;
 //     console.log("Conectado!");
 // });
-app2.get("/",(req,res)=>{
+app.get("/",(req,res)=>{
   res.status(200).json({msg:"Sucesso"})
 })
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', '*');
-    next();
-  });
-  app2.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', '*');
@@ -85,12 +81,12 @@ var options =  {
   cert: fs.readFileSync("cert.pem"),
 }
 
-https.createServer(options, app2).listen(portaServidor, '0.0.0.0', () => {
-  console.log("Servidor conectado na porta " + portaServidor);
-});
-app.use(cors());
+// https.createServer(options, app).listen(portaServidor, '0.0.0.0', () => {
+//   console.log("Servidor conectado na porta " + portaServidor);
+// });
 
-app2.post('/auth/register/',async(req,res)=>{
+
+app.post('/auth/register/',async(req,res)=>{
   const name = req.body.name
   const email = req.body.email
   const password = req.body.password
@@ -122,7 +118,7 @@ app2.post('/auth/register/',async(req,res)=>{
   res.status(201).send({msg:"Usuário criado com sucesso"})
 })
 
-app2.post("/auth/user/", async(req,res)=>{
+app.post("/auth/user/", async(req,res)=>{
   const email = req.body.email
   const password = req.body.password
   if( !email ){
@@ -157,7 +153,7 @@ app2.post("/auth/user/", async(req,res)=>{
 })
 
 // Adicionar o checkToken em todos as URLS que você quer proteger.
-app2.get("/user/:id", checkToken, async(req,res) => {
+app.get("/user/:id", checkToken, async(req,res) => {
   const id = req.params.id
   const usuario = await encontrarUsuarioPorId(id)
   if( usuario == null ){
@@ -194,7 +190,7 @@ function checkToken(req, res, next) {
 }
 //LOGIN
 
-app2.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
+app.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
   const id = req.params.id;
   const name = req.body.name;
   const email = req.body.email;

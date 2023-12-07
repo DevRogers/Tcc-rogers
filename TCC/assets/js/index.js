@@ -1,6 +1,6 @@
 const URL = "http://localhost:3005/historicos/";
 const URL1 = "http://localhost:3005/historicos/total/";
-const URL_USER = "https://localhost:3004/user/"
+const URL_USER = "http://localhost:3005/user/"
 
 enviaGET(localStorage.getItem('id'))
 
