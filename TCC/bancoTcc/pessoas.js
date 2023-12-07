@@ -1,10 +1,10 @@
 const sequelize = require("sequelize");
-const banco = require("./banco");
-const Pessoas = require("./pessoas");
+const banco = require("./banco")
+const usuario = require("./Usuario")
 const Veiculos = require("./veiculos")
-const Historicos = require("./historico")
-var Usuario = banco.conexao.define(
-    "usuario",
+
+var Pessoas = banco.conexao.define(
+    "pessoas",
     {
         id:{
             type:sequelize.INTEGER.UNSIGNED,
@@ -15,17 +15,22 @@ var Usuario = banco.conexao.define(
             type:sequelize.STRING,
             allowNull:false
         },
-        email:{
+        telefone:{
             type:sequelize.STRING,
             allowNull:false
         },
-        hash:{
+        cidade:{
+            type:sequelize.STRING,
+            allowNull:false
+        },
+        estado:{
             type:sequelize.STRING,
             allowNull:false
         }
+    },
+    {
+        timestamps: false
     }
 )
-Usuario.hasMany(Pessoas.Pessoas)
-Usuario.hasMany(Veiculos.Veiculos)
-Usuario.hasMany(Historicos.Historicos)
-module.exports = {Usuario: Usuario}
+Pessoas.hasMany(Veiculos.Veiculos)
+module.exports = {Pessoas: Pessoas}

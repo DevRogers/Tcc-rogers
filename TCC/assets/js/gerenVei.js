@@ -1,7 +1,7 @@
 const URL = "http://localhost:3005/veiculos/";
 
 var idVeiculo = null
-var idPessoa = null
+var pessoaId = null
 lerParametros();
 
 
@@ -15,7 +15,7 @@ function lerParametros() {
     const estado = urlParams.get('estado');
 
 
-    idPessoa = urlParams.get('idPessoa');
+    pessoaId = urlParams.get('pessoaId');
     nomePessoa = urlParams.get('nomePessoa');
     telefonePessoa = urlParams.get('telefonePessoa');
     cidadePessoa = urlParams.get('cidadePessoa');
@@ -66,15 +66,15 @@ botaoAdicionar.addEventListener("click", function(){
     var modelo = document.getElementById("inputModelo").value
     var cidade = document.getElementById("inputCidade").value 
     var estado = document.getElementById("inputEstado").value
-    var idUsuario = localStorage.getItem("id");
+    var usuarioId = localStorage.getItem("id");
     if( idVeiculo != null ){
-        enviaPUT(idVeiculo, placa, renavam, modelo, cidade, estado, idPessoa, idUsuario)
+        enviaPUT(idVeiculo, placa, renavam, modelo, cidade, estado, pessoaId, usuarioId)
     }else{
-        enviaPOST( placa, renavam, modelo, cidade, estado, idPessoa, idUsuario )
+        enviaPOST( placa, renavam, modelo, cidade, estado, pessoaId, usuarioId )
     }
 })
 
-function enviaPUT( idVeiculo, placa, renavam, modelo, cidade, estado, idPessoa, idUsuario ){
+function enviaPUT( idVeiculo, placa, renavam, modelo, cidade, estado, pessoaId, usuarioId ){
     var header = {
         method:"PUT",
         headers:{"Content-Type":"application/json"},
@@ -84,24 +84,24 @@ function enviaPUT( idVeiculo, placa, renavam, modelo, cidade, estado, idPessoa, 
             modelo:modelo,
             cidade:cidade,
             estado:estado,
-            idPessoa:idPessoa,
-            idUsuario:idUsuario
+            pessoaId:pessoaId,
+            usuarioId:usuarioId
         })
     }
     fetch(URL+idVeiculo,header)
     .then(function(response){
         return response.json()
     }).then(function(data){
-        window.location.href = "listarVei.html?idPessoa="+idPessoa+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
+        window.location.href = "listarVei.html?pessoaId="+pessoaId+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
     }).catch(function(){
         console.log("Erro ao atualizar veículo");
     })
 }
 
 var codigoPessoa = document.getElementById("codigoPessoa")
-codigoPessoa.innerText = idPessoa;
+codigoPessoa.innerText = pessoaId;
 
-function enviaPOST( placa, renavam, modelo, cidade, estado, idPessoa, idUsuario ){
+function enviaPOST( placa, renavam, modelo, cidade, estado, pessoaId, usuarioId ){
     var header = {
         method:"POST",
         headers:{"Content-Type":"application/json"},
@@ -111,16 +111,17 @@ function enviaPOST( placa, renavam, modelo, cidade, estado, idPessoa, idUsuario 
             modelo:modelo,
             cidade:cidade,
             estado:estado,
-            idPessoa:idPessoa,
-            idUsuario:idUsuario
+            pessoaId:pessoaId,
+            usuarioId:usuarioId
         })
     }
     fetch(URL,header)
     .then(function(response){
         return response.json()
     }).then(function(data){
-        window.location.href = "listarVei.html?idPessoa="+idPessoa+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
-    }).catch(function(){
+        window.location.href = "listarVei.html?pessoaId="+pessoaId+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
+    }).catch(function(error){
+        console.log(error);
         alert('Ocorreu um erro na inserção do registro!');
     })
 }

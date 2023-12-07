@@ -1,5 +1,5 @@
-const URL = "http://localhost:3005/historico/";
-const URL1 = "http://localhost:3005/historico/total/";
+const URL = "http://localhost:3005/historicos/";
+const URL1 = "http://localhost:3005/historicos/total/";
 const URL_USER = "https://localhost:3004/user/"
 
 enviaGET(localStorage.getItem('id'))
@@ -42,8 +42,8 @@ editarDados.addEventListener("click", function(){
 window.location.href = 'editarDados.html'
 })
 
-var idUsuario = localStorage.getItem("id")
-fetch(URL1 + idUsuario)
+var usuarioId = localStorage.getItem("id")
+fetch(URL1 + usuarioId)
   .then(response => {
     if (!response.ok) {
       throw new Error(`Erro na solicitação: ${response.status}`);
@@ -105,7 +105,7 @@ function formatCurrency(value) {
 window.addEventListener("DOMContentLoaded", atualizarListaHistorico);
 async function obterDadosDoServidor() {
   try {
-    const response = await fetch(URL+idUsuario);
+    const response = await fetch(URL+usuarioId);
     if (!response.ok) {
       throw new Error("Erro ao buscar dados do servidor.");
     }
@@ -128,22 +128,22 @@ async function atualizarListaHistorico() {
   }
 }
 
-function criarLinhaHistorico(historico) {
+function criarLinhaHistorico(historicos) {
   const seta =
-    historico.tipo === "Entrada"
+    historicos.tipo === "Entrada"
       ? '<img src="assets/images/setVerde.png" class="seta" alt="Entrada">'
       : '<img src="assets/images/setVermelha.png" class="seta" alt="Saída">';
 
   return (
     `<tr id="linhaHistorico">
       <td>
-          <div>` + historico.nome +`</div>
+          <div>` + historicos.nome +`</div>
       </td>
-      <td class="stat-cell">` +historico.placa +`</td>
+      <td class="stat-cell">` +historicos.placa +`</td>
       <td class="stat-cell">
-          `+historico.tipo+` `+seta+`
+          `+historicos.tipo+` `+seta+`
       </td>
-      <td class="stat-cell">R$`+historico.valor+`</td>
+      <td class="stat-cell">R$`+historicos.valor+`</td>
   </tr>
           </tr>`
   );

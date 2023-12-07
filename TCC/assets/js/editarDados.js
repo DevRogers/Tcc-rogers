@@ -1,7 +1,7 @@
 
 
 const URL_USER = "https://localhost:3004/auth/user/"
-var idUsuario = localStorage.getItem("id")
+var usuarioId = localStorage.getItem("id")
 lerParametros();
 function lerParametros(){
     var name = localStorage.getItem("nome")
@@ -18,10 +18,10 @@ botaoAdicionar.addEventListener("click", function(){
     var email = document.getElementById("email").value;
     var token = localStorage.getItem("token");  // Obtém o token armazenado localmente
 
-    enviaPUT(idUsuario, name, email, token);
+    enviaPUT(usuarioId, name, email, token);
 });
 
-function enviaPUT(idUsuario, name, email, token){
+function enviaPUT(usuarioId, name, email, token){
     var header = {
         method: "PUT",
         headers: {
@@ -33,7 +33,7 @@ function enviaPUT(idUsuario, name, email, token){
             email: email
         })
     };
-    fetch(URL_USER + idUsuario, header)
+    fetch(URL_USER + usuarioId, header)
     .then(function(response){
         return response.json();
     }).then(function(data){

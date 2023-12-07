@@ -1,31 +1,38 @@
 const sequelize = require("sequelize");
-const banco = require("./banco");
-const Pessoas = require("./pessoas");
-const Veiculos = require("./veiculos")
-const Historicos = require("./historico")
-var Usuario = banco.conexao.define(
-    "usuario",
+const banco = require("./banco")
+
+var Veiculos = banco.conexao.define(
+    "veiculos",
     {
         id:{
             type:sequelize.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement:true
         },
-        name:{
+        placa:{
             type:sequelize.STRING,
             allowNull:false
         },
-        email:{
+        renavam:{
             type:sequelize.STRING,
             allowNull:false
         },
-        hash:{
+        modelo:{
+            type:sequelize.STRING,
+            allowNull:false
+        },
+        cidade:{
+            type:sequelize.STRING,
+            allowNull:false
+        },
+        estado:{
             type:sequelize.STRING,
             allowNull:false
         }
+    },
+    {
+        timestamps: false
     }
 )
-Usuario.hasMany(Pessoas.Pessoas)
-Usuario.hasMany(Veiculos.Veiculos)
-Usuario.hasMany(Historicos.Historicos)
-module.exports = {Usuario: Usuario}
+
+module.exports = {Veiculos: Veiculos}

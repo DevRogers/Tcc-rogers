@@ -20,7 +20,7 @@ function criarLinhaPessoa(pessoa) {
   return (
     `<tr id="linhaPessoa">
             <td class="cell">` + pessoa.id + `</td>
-            <td class="cell"><span class="truncate">` + pessoa.nome + `</span></td>
+            <td class="cell"><span class="truncate">` + pessoa.name + `</span></td>
             <td class="cell">` +pessoa.telefone +`</td>
             <td class="cell">` +pessoa.cidade +`</td>
             <td class="cell">` +pessoa.estado +`</td>
@@ -70,8 +70,8 @@ function adicionarPessoas() {
   })
   
 }
-var idUsuario = localStorage.getItem("id");
-fetch(URL + idUsuario)
+var usuarioId = localStorage.getItem("id");
+fetch(URL + usuarioId)
   .then(function (response) {
     return response.json();
   })
@@ -127,17 +127,17 @@ function cadastrarEventosLixeira() {
   for (let i = 0; i < lixeiras.length; i++) {
       const l = lixeiras[i];
       l.addEventListener("click", function(event) {
-          var idPessoa = this.dataset.id;
-          realizarExclusao(idPessoa);
+          var pessoaId = this.dataset.id;
+          realizarExclusao(pessoaId);
       });
   }
 }
 
 
 //EDITAR CADASTROS DE PESSOAS
-function editarURL(url, idPessoa, nomePessoa, telefonePessoa, cidadePessoa, estadoPessoa) {
+function editarURL(url, pessoaId, name, telefonePessoa, cidadePessoa, estadoPessoa) {
   return (
-    url +"?idPessoa=" +idPessoa +"&nomePessoa=" +nomePessoa +"&telefonePessoa=" +telefonePessoa +"&cidadePessoa=" +cidadePessoa +"&estadoPessoa=" +estadoPessoa
+    url +"?pessoaId=" +pessoaId +"&nomePessoa=" +name +"&telefonePessoa=" +telefonePessoa +"&cidadePessoa=" +cidadePessoa +"&estadoPessoa=" +estadoPessoa
   );
 }
 function cadastrarEventosLapis() {
@@ -145,12 +145,12 @@ function cadastrarEventosLapis() {
   for (let i = 0; i < lapis.length; i++) {
     const l = lapis[i];
     l.addEventListener("click", function (event) {
-      var idPessoa = event.target.parentElement.parentElement.children[0].innerText;
+      var pessoaId = event.target.parentElement.parentElement.children[0].innerText;
       var nomePessoa = event.target.parentElement.parentElement.children[1].innerText;
       var telefonePessoa =event.target.parentElement.parentElement.children[2].innerText;
       var cidadePessoa =event.target.parentElement.parentElement.children[3].innerText;
       var estadoPessoa =event.target.parentElement.parentElement.children[4].innerText;
-      window.location.href = editarURL("gerenCli.html",idPessoa,nomePessoa,telefonePessoa,cidadePessoa,estadoPessoa);
+      window.location.href = editarURL("gerenCli.html",pessoaId,nomePessoa,telefonePessoa,cidadePessoa,estadoPessoa);
     });
   }
 }
@@ -161,12 +161,12 @@ function cadastrarEventosPlaca(){
     for (let i = 0; i < placas.length; i++) {
         const l = placas[i];
         l.addEventListener("click",function(event){
-            var idPessoa = event.target.parentElement.parentElement.children[0].innerText;
+            var pessoaId = event.target.parentElement.parentElement.children[0].innerText;
             var nomePessoa = event.target.parentElement.parentElement.children[1].innerText;
             var telefonePessoa =event.target.parentElement.parentElement.children[2].innerText;
             var cidadePessoa =event.target.parentElement.parentElement.children[3].innerText;
             var estadoPessoa =event.target.parentElement.parentElement.children[4].innerText;
-            window.location.href = editarURL("listarVei.html",idPessoa,nomePessoa,telefonePessoa,cidadePessoa,estadoPessoa);
+            window.location.href = editarURL("listarVei.html",pessoaId,nomePessoa,telefonePessoa,cidadePessoa,estadoPessoa);
         })
     }
 }

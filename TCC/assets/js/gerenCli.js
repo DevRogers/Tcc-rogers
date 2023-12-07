@@ -1,13 +1,13 @@
 const URL = "http://localhost:3005/pessoas/"
 
-var idPessoa = null
+var pessoaId = null
 lerParametros()
 
 function lerParametros(){
     const urlParams = new URLSearchParams(window.location.search);
-    idPessoa = urlParams.get("idPessoa")
-    if( idPessoa != null) {
-        var nomePessoa = urlParams.get("nomePessoa")
+    pessoaId = urlParams.get("pessoaId")
+    if( pessoaId != null) {
+        var name = urlParams.get("name")
         var telefonePessoa = urlParams.get("telefonePessoa")
         var cidadePessoa = urlParams.get("cidadePessoa")
         var estadoPessoa = urlParams.get("estadoPessoa")
@@ -15,7 +15,7 @@ function lerParametros(){
     
         //telefonePessoa = telefonePessoa.replace(/\s+/g, '').replace(/-/g, '');
         //telefonePessoa = telefonePessoa.replace(" ", '');
-        document.getElementById("inputName").value = nomePessoa
+        document.getElementById("inputName").value = name
     
         document.getElementById("inputTelefone").value = telefonePessoa
         
@@ -47,28 +47,28 @@ function carregarCidades(estadoPessoa){
 
 var botaoAdicionar = document.getElementById("botaoAdicionar")
 botaoAdicionar.addEventListener("click", function(){
-    var nomePessoa = document.getElementById("inputName").value
+    var name = document.getElementById("inputName").value
     var TelefonePessoa = document.getElementById("inputTelefone").value
     var cidadePessoa = document.getElementById("inputCity").value
     var estadoPessoa = document.getElementById("inputEstado").value
-    var idUsuario = localStorage.getItem("id")
-    if( idPessoa != null ){
-        enviaPUT(idPessoa, nomePessoa, TelefonePessoa, cidadePessoa, estadoPessoa, idUsuario)
+    var usuarioId = localStorage.getItem("id")
+    if( pessoaId != null ){
+        enviaPUT(pessoaId, name, TelefonePessoa, cidadePessoa, estadoPessoa, )
     }else{
-        enviaPOST( nomePessoa, TelefonePessoa, cidadePessoa, estadoPessoa, idUsuario)
+        enviaPOST( name, TelefonePessoa, cidadePessoa, estadoPessoa, usuarioId)
     } 
 })
 
-function enviaPOST( nomePessoa, TelefonePessoa, cidadePessoa, estadoPessoa, idUsuario ){
+function enviaPOST( name, TelefonePessoa, cidadePessoa, estadoPessoa, usuarioId ){
     var header = {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-            nome:nomePessoa,
+            name:name,
             telefone: TelefonePessoa,
             cidade: cidadePessoa,
             estado:estadoPessoa,
-            idUsuario: idUsuario
+            usuarioId: usuarioId
         })
     }
     fetch(URL,header)
@@ -80,16 +80,16 @@ function enviaPOST( nomePessoa, TelefonePessoa, cidadePessoa, estadoPessoa, idUs
         alert("Erro")
     })
 }
-function enviaPUT( id,nomePessoa, TelefonePessoa, cidadePessoa, estadoPessoa, idUsuario){
+function enviaPUT( id,name, TelefonePessoa, cidadePessoa, estadoPessoa, usuarioId){
     var header = {
         method:"PUT",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-            nome:nomePessoa,
+            name:name,
             telefone: TelefonePessoa,
             cidade: cidadePessoa,
             estado:estadoPessoa,
-            idUsuario: idUsuario
+            usuarioId: usuarioId
         })
     }
     fetch(URL+id,header)

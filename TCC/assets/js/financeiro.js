@@ -2,16 +2,16 @@ const URL2 = "http://localhost:3005/pessoas/";
 const URL3 = "http://localhost:3005/veiculos/";
 var pessoasData = {};
 var veiculosData = {};
-var idUsuario = localStorage.getItem("id");
+var usuarioId = localStorage.getItem("id");
 // lendo dados URL2
 lerPessoas();
 
 function lerPessoas() {
-  fetch(URL2 + idUsuario)
+  fetch(URL2 + usuarioId)
     .then(response => response.json())
     .then(data => {
       data.forEach(pessoa => {
-        pessoasData[pessoa.nome] = { id: pessoa.id, veiculos: [] };
+        pessoasData[pessoa.name] = { id: pessoa.id, veiculos: [] };
         console.log(pessoasData)
       });
       lerVeiculos();
@@ -22,13 +22,13 @@ function lerPessoas() {
 }
 //lendo dados URL3
 function lerVeiculos() {
-  fetch(URL3 + idUsuario)
+  fetch(URL3 + usuarioId)
     .then(response => response.json())
     .then(data => {
       data.forEach(veiculo => {
-        const pessoaId = veiculo.idPessoa;
+        const pessoaId = veiculo.pessoaId;  
         const pessoaNome = Object.keys(pessoasData).find(
-          nome => pessoasData[nome].id === pessoaId
+          name => pessoasData[name].id === pessoaId
         );
 
         if (pessoaNome) {
@@ -98,13 +98,13 @@ placaSelect.addEventListener("change", function() {
 //fim pesquisa placa por pessoa
 
 //Inicio sistema financeiro
-const URL = "http://localhost:3005/historico/";
+const URL = "http://localhost:3005/historicos/";
 idHistorico = null;
 
 var botaoAdicionar = document.getElementById("btnNew")
 botaoAdicionar.addEventListener("click", function(){
   var id = guardarId;
-    var nome = document.getElementById("nome").value
+    var name = document.getElementById("nome").value
     var valor = document.getElementById("valor").value
     var descricao = document.getElementById("descri").value
     var data = document.getElementById("data").value
@@ -125,10 +125,10 @@ botaoAdicionar.addEventListener("click", function(){
     } else {
         entrada = 0;
     }
-        enviaPUT(id, nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, idUsuario)
+        enviaPUT(id, name, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId)
         location.reload()
     }else{
-        enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, idUsuario)
+        enviaPOST(name, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId)
         // location.reload();
   }
     document.getElementById("nome").value = "";
@@ -140,7 +140,7 @@ botaoAdicionar.addEventListener("click", function(){
     document.getElementById("tipo").value = "";
 })
 
-function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, idUsuario) {
+function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId) {
   var header = {
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -154,7 +154,7 @@ function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, 
         tipo:tipo,
         entrada:entrada,
         saida:saida,
-        idUsuario:idUsuario
+        usuarioId:usuarioId
     })
 }
   fetch(URL, header)
@@ -177,7 +177,7 @@ function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, 
     });
 }
 
-function enviaPUT(id, nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, idUsuario) {
+function enviaPUT(id, nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId) {
   var header = {
     method:"PUT",
     headers:{"Content-Type":"application/json"},
@@ -191,7 +191,7 @@ function enviaPUT(id, nome, valor, descricao, data, veiculo, placa, tipo, entrad
       tipo:tipo,
       entrada:entrada,
       saida:saida,
-      idUsuario:idUsuario
+      usuarioId:usuarioId
     })
 }
   fetch(URL + id, header)
@@ -306,7 +306,7 @@ async function atualizarListaHistorico() {
 window.addEventListener('DOMContentLoaded', atualizarListaHistorico);
 async function obterDadosDoServidor() {
   try {
-    const response = await fetch(URL + idUsuario);
+    const response = await fetch(URL + usuarioId);
     if (!response.ok) {
       throw new Error('Erro ao buscar dados do servidor.');
     }
@@ -336,7 +336,7 @@ function adicionarHistorico() {
   cadastrarEventosLixeira();
 }
 
-fetch(URL + idUsuario).then(function(response) {
+fetch(URL + usuarioId).then(function(response) {
   return response.json();
 }).then(function(data) {
   listaHistorico = data
@@ -361,7 +361,7 @@ function cadastrarEventosLapis() {
     const l = lapis[i];
     l.addEventListener("click", function (event) {
       guardarId= this.dataset.id
-      var nome = event.target.parentElement.parentElement.children[0].innerText;
+      var name = event.target.parentElement.parentElement.children[0].innerText;
       var valor =event.target.parentElement.parentElement.children[1].innerText;
       var descricao =event.target.parentElement.parentElement.children[2].innerText;
       var data =event.target.parentElement.parentElement.children[3].innerText;
@@ -369,8 +369,8 @@ function cadastrarEventosLapis() {
       var tipo =event.target.parentElement.parentElement.children[5].innerText;
       
 
-      document.getElementById("nome").value = nome;
-      selectedName = nome;
+      document.getElementById("nome").value = name;
+      selectedName = name;
       document.getElementById("valor").value = valor;
       document.getElementById("descri").value = descricao;
       document.getElementById("data").value = formatDateForInput(data);
@@ -444,7 +444,7 @@ function atualizarValoresNoHTML() {
 
 async function fetchData() {
   try {
-    const response = await fetch(URL + idUsuario);
+    const response = await fetch(URL + usuarioId);
     if (!response.ok) {
       throw new Error("Failed to fetch data.");
     }

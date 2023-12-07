@@ -4,7 +4,7 @@ var listaHistorico = [];
 
 function lerParametros1() {
   const urlParams = new URLSearchParams(window.location.search);
-  idPessoa = urlParams.get("idPessoa");
+  pessoaId = urlParams.get("pessoaId");
   nomePessoa = urlParams.get("nomePessoa");
   telefonePessoa = urlParams.get("telefonePessoa");
   cidadePessoa = urlParams.get("cidadePessoa");
@@ -72,8 +72,8 @@ function adicionarVeiculos() {
   cadastrarEventosLapis();
   cadastrarEventosLixeira();
 }
-var idUsuario = localStorage.getItem("id");
-fetch(`${URL}${idPessoa}/${idUsuario}`)
+var usuarioId = localStorage.getItem("id");
+fetch(`${URL}${pessoaId}/${usuarioId}`)
   .then(function (response) {
     return response.json();
   })
@@ -87,7 +87,7 @@ fetch(`${URL}${idPessoa}/${idUsuario}`)
 
 var botaoAdicionar = document.getElementById("add");
 botaoAdicionar.addEventListener("click", function () {
-  window.location.href = "gerenVei.html?idPessoa=" + idPessoa + "&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
+  window.location.href = "gerenVei.html?pessoaId=" + pessoaId + "&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
 });
 
 function atualizarTela(id) {
@@ -137,7 +137,7 @@ function cadastrarEventosLapis() {
       var cidade =event.target.parentElement.parentElement.children[4].innerText;
       var estado =event.target.parentElement.parentElement.children[5].innerText;
       window.location.href = editarURL(
-        "gerenVei.html?idPessoa="+idPessoa+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa, 
+        "gerenVei.html?pessoaId="+pessoaId+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa, 
         id,
         placa,
         renavam,

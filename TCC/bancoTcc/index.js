@@ -17,6 +17,12 @@ const app = express()
 const jsonParser = bodyParser.json()
 const app2 = express2();
 
+
+const veiculos = require("./veiculos")
+const pessoas = require("./pessoas")
+const historico = require("./historico")
+
+
 app.listen(3005)
 app.use(express.json())
 const portaServidor = process.env.PORT || 3004;
@@ -56,14 +62,14 @@ app.use(function (req, res, next) {
 
 //LOGIN
 async function encontrarUsuarioPorEmail(email){
-  const resultado = await Usuario.usuario.findAll({
+  const resultado = await Usuario.Usuario.findAll({
     where:{ email:email }
   })
   if( resultado.length == 0 ) return null
   return resultado[0]
 }
 async function encontrarUsuarioPorId(id){
-  const resultado = await Usuario.usuario.findByPk(id)
+  const resultado = await Usuario.Usuario.findByPk(id)
   return resultado
 }
 
@@ -108,7 +114,7 @@ app2.post('/auth/register/',async(req,res)=>{
   const salt = await bcryptjs.genSalt(12)
   const passwordHash = await bcryptjs.hash(password,salt)
 
-  const resultado = await Usuario.usuario.create({
+  const resultado = await Usuario.Usuario.create({
     "name":name,
     "email":email,
     "hash":passwordHash
@@ -230,9 +236,9 @@ app2.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
 });
 
 //Cadastro e listagem de pessoas
-app.get("/pessoas/:idUsuario", function (req, res) {
-    var sql = "SELECT * FROM pessoas WHERE idUsuario=?;"
-    var values = [req.params.idUsuario]
+app.get("/pessoas/:usuarioId", function (req, res) {
+    var sql = "SELECT * FROM pessoas WHERE usuarioId=?;"
+    var values = [req.params.usuarioId]
     con.query(sql,values, function (err, result, fields) {
         if (err) throw err;
         res.send(result)
@@ -240,9 +246,9 @@ app.get("/pessoas/:idUsuario", function (req, res) {
 })
 
 
-app.get("/pessoas/nome/:idUsuario", function (req, res) {
-  var sql = "SELECT * FROM pessoas WHERE nome = ? AND idUsuario = ?";
-  var values = [req.params.nome, req.params.idUsuario];
+app.get("/pessoas/nome/:usuarioId", function (req, res) {
+  var sql = "SELECT * FROM pessoas WHERE name = ? AND usuarioId = ?";
+  var values = [req.params.name, req.params.usuarioId];
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     if (result.length == 0) {
@@ -266,25 +272,25 @@ app.get("/pessoas/:id", function (req, res) {
 })
 
 app.post("/pessoas/", jsonParser, function (req, res) {
-    var sql = "INSERT INTO pessoas (nome, telefone, cidade, estado, idUsuario) VALUES (?,?,?,?,?)";
-    var values = [req.body.nome, req.body.telefone, req.body.cidade, req.body.estado, req.body.idUsuario]
+    var sql = "INSERT INTO pessoas (name, telefone, cidade, estado, usuarioId) VALUES (?,?,?,?,?)";
+    var values = [req.body.name, req.body.telefone, req.body.cidade, req.body.estado, req.body.usuarioId]
     con.query(sql, values, function (err, result) {
         if (err) throw err;
         const novaPessoa = {
             id: result.insertId,
-            nome: req.body.nome,
+            name: req.body.name,
             telefone: req.body.telefone,
             cidade: req.body.cidade,
             estado: req.body.estado,
-            idUsuario:req.body.idUsuario
+            usuarioId:req.body.usuarioId
         };
         res.send(novaPessoa);
     });
 });
 
 app.put("/pessoas/:id",jsonParser, function(req,res){
-    var sql = "UPDATE pessoas SET nome = ?, telefone = ?, cidade = ?, estado =?, idUsuario=? WHERE id = ?";
-    var values = [req.body.nome, req.body.telefone, req.body.cidade, req.body.estado, req.body.idUsuario, req.params.id]
+    var sql = "UPDATE pessoas SET name = ?, telefone = ?, cidade = ?, estado =?, usuarioId=? WHERE id = ?";
+    var values = [req.body.name, req.body.telefone, req.body.cidade, req.body.estado, req.body.usuarioId, req.params.id]
     con.query(sql, values, function (err, result) {
       if (err) throw err;
       if( result.affectedRows == 0 ){
@@ -292,11 +298,11 @@ app.put("/pessoas/:id",jsonParser, function(req,res){
       }else{
         const novaPessoa = {
           id: req.params.id,
-          nome: req.body.nome,
+          name: req.body.name,
           telefone:req.body.telefone,
           cidade: req.body.cidade,
           estado: req.body.estado,
-          idUsuario:req.body.idUsuario
+          usuarioId:req.body.usuarioId
         };
         res.send( novaPessoa );
       }
@@ -319,25 +325,25 @@ app.put("/pessoas/:id",jsonParser, function(req,res){
 //Fim do Cadastro e listagem de pessoas
 
 //Cadastro do Financeiro
-app.get("/historico/:idUsuario", function (req,res){
-  var sql = "SELECT * FROM historico WHERE idUsuario=? ORDER BY id DESC;"
-  var values = [req.params.idUsuario]
+app.get("/historicos/:usuarioId", function (req,res){
+  var sql = "SELECT * FROM historicos WHERE usuarioId=? ORDER BY id DESC;"
+  var values = [req.params.usuarioId]
   con.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.send( result )
   })
 })
-app.get("/historico/total/:idUsuario", function (req,res){
-  var sql = "SELECT count(id) FROM historico WHERE idUsuario=?"
-  var values = [req.params.idUsuario]
+app.get("/historicos/total/:usuarioId", function (req,res){
+  var sql = "SELECT count(id) FROM historicos WHERE usuarioId=?"
+  var values = [req.params.usuarioId]
   con.query(sql,values, function (err, result, fields) {
     if (err) throw err;
     res.send( result )
   })
 })
-app.post("/historico/", jsonParser, function( req, res ){
-  var sql = "INSERT INTO historico (nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, idUsuario) VALUES (?,?,?,?,?,?,?,?,?,?)";
-  var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo, req.body.entrada, req.body.saida, req.body.idUsuario]
+app.post("/historicos/", jsonParser, function( req, res ){
+  var sql = "INSERT INTO historicos (nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId) VALUES (?,?,?,?,?,?,?,?,?,?)";
+  var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo, req.body.entrada, req.body.saida, req.body.usuarioId]
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     const novoHistorico = {
@@ -351,15 +357,15 @@ app.post("/historico/", jsonParser, function( req, res ){
       tipo:req.body.tipo,
       entrada:req.body.entrada,
       saida:req.body.saida,
-      idUsuario:req.body.idUsuario
+      usuarioId:req.body.usuarioId
     };
     res.send( novoHistorico );
   });
 });
 
-app.put("/historico/:id",jsonParser, function(req,res){
-  var sql = "UPDATE historico SET nome = ?, valor = ?, descricao = ?, data = ?, veiculo = ?, placa=?, tipo = ?, entrada = ?, saida = ?, idUsuario=? WHERE id = ?";
-  var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo,req.body.entrada,req.body.saida, req.body.idUsuario, req.params.id]
+app.put("/historicos/:id",jsonParser, function(req,res){
+  var sql = "UPDATE historicos SET nome = ?, valor = ?, descricao = ?, data = ?, veiculo = ?, placa=?, tipo = ?, entrada = ?, saida = ?, usuarioId=? WHERE id = ?";
+  var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo,req.body.entrada,req.body.saida, req.body.usuarioId, req.params.id]
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     if( result.affectedRows == 0 ){
@@ -376,15 +382,15 @@ app.put("/historico/:id",jsonParser, function(req,res){
         tipo:req.body.tipo,
         entrada:req.body.entrada,
         saida:req.body.saida,
-        idUsuario:req.body.idUsuario
+        usuarioId:req.body.usuarioId
       };
       res.send( novoHistorico );
     }
   });
 });
 
-app.delete("/historico/:id", jsonParser, function(req, res){
-  var sql = "DELETE FROM historico WHERE id = ?";
+app.delete("/historicos/:id", jsonParser, function(req, res){
+  var sql = "DELETE FROM historicos WHERE id = ?";
   var values = [req.params.id]
   con.query(sql, values, function (err, result) {
     if (err) throw err;
@@ -399,17 +405,17 @@ app.delete("/historico/:id", jsonParser, function(req, res){
 //Fim cadastro do financeiro
 
 //Inicio cadastro de placas
-app.get("/veiculos/:idPessoa/:idUsuario", function (req, res) {
-  var sql = "SELECT * FROM veiculos WHERE idPessoa=? AND idUsuario=?;";
-  var values = [req.params.idPessoa, req.params.idUsuario];
+app.get("/veiculos/:pessoaId/:usuarioId", function (req, res) {
+  var sql = "SELECT * FROM veiculos WHERE pessoaId=? AND usuarioId=?;";
+  var values = [req.params.pessoaId, req.params.usuarioId];
   con.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.send(result);
   });
 });
-app.get("/veiculos/:idUsuario", function (req, res) {
-  var sql = "SELECT * FROM veiculos WHERE idUsuario=?;";
-  var values = [req.params.idUsuario];
+app.get("/veiculos/:usuarioId", function (req, res) {
+  var sql = "SELECT * FROM veiculos WHERE usuarioId=?;";
+  var values = [req.params.usuarioId];
   con.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.send(result);
@@ -425,8 +431,8 @@ app.get("/veiculos/", function (req, res) {
 })
 
 app.post("/veiculos/", jsonParser, function( req, res ){
-  var sql = "INSERT INTO veiculos (placa, renavam, modelo, cidade, estado, idPessoa, idUsuario) VALUES (?,?,?,?,?,?,?)";
-  var values = [req.body.placa, req.body.renavam, req.body.modelo,req.body.cidade, req.body.estado, req.body.idPessoa, req.body.idUsuario]
+  var sql = "INSERT INTO veiculos (placa, renavam, modelo, cidade, estado, pessoaId, usuarioId) VALUES (?,?,?,?,?,?,?)";
+  var values = [req.body.placa, req.body.renavam, req.body.modelo,req.body.cidade, req.body.estado, req.body.pessoaId, req.body.usuarioId]
   console.log(values);
   con.query(sql, values, function (err, result) {
     if (err) throw err;
@@ -437,16 +443,16 @@ app.post("/veiculos/", jsonParser, function( req, res ){
       modelo:req.body.modelo,
       cidade:req.body.cidade,
       estado:req.body.estado,
-      idPessoa:req.body.idPessoa,
-      idUsuario:req.body.idUsuario
+      pessoaId:req.body.pessoaId,
+      usuarioId:req.body.usuarioId
     };
     res.send( novaPlaca );
   });
 });
 
 app.put("/veiculos/:id",jsonParser, function(req,res){
-  var sql = "UPDATE veiculos SET placa = ?, renavam = ?, modelo = ?,cidade = ?, estado = ?, idPessoa = ?, idUsuario=? WHERE id = ?";
-  var values = [req.body.placa, req.body.renavam, req.body.modelo, req.body.cidade, req.body.estado, req.body.idPessoa, req.body.idUsuario, req.params.id]
+  var sql = "UPDATE veiculos SET placa = ?, renavam = ?, modelo = ?,cidade = ?, estado = ?, pessoaId = ?, usuarioId=? WHERE id = ?";
+  var values = [req.body.placa, req.body.renavam, req.body.modelo, req.body.cidade, req.body.estado, req.body.pessoaId, req.body.usuarioId, req.params.id]
   con.query(sql, values, function (err, result) {
     if (err) throw err;
     if( result.affectedRows == 0 ){
@@ -459,8 +465,8 @@ app.put("/veiculos/:id",jsonParser, function(req,res){
         modelo:req.body.modelo,
         cidade:req.body.cidade,
         estado:req.body.estado,
-        idPessoa:req.body.idPessoa,
-        idUsuario:req.body.idUsuario
+        pessoaId:req.body.pessoaId,
+        usuarioId:req.body.usuarioId
       };
       res.send( novaPlaca );
     }
