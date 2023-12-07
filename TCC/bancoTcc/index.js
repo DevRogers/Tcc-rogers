@@ -242,16 +242,6 @@ app.get("/pessoas/:usuarioId",async function(req, res) {
   res.json(resultado);
 })
 
-app.get("/pessoas/:usuarioId", function (req, res) {
-    var sql = "SELECT * FROM pessoas WHERE usuarioId=?;"
-    var values = [req.params.usuarioId]
-    con.query(sql,values, function (err, result, fields) {
-        if (err) throw err;
-        res.send(result)
-    })
-})
-
-
 app.get("/pessoas/nome/:usuarioId", function (req, res) {
   var sql = "SELECT * FROM pessoas WHERE name = ? AND usuarioId = ?";
   var values = [req.params.name, req.params.usuarioId];
