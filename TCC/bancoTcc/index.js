@@ -232,6 +232,11 @@ app.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
 });
 
 //Cadastro e listagem de pessoas
+app.get("/pessoas/",async function(req, res) {
+  const resultado = await pessoa.pessoa.findAll()
+  res.json(resultado);
+})
+
 app.get("/pessoas/:usuarioId",async function(req, res) {
   const resultado = await pessoas.Pessoas.findAll({
       where:{ usuarioId:req.params.usuarioId }
