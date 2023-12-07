@@ -27,7 +27,7 @@ banco.conexao.sync( function(){
 })
 
 var con = mysql.createConnection({
-    host: "0.0.0.0",
+  host: "localhost",
     user: "fabioRoger",
     password: "Abcd&123",
     database: "bancoTcc"
