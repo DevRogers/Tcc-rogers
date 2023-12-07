@@ -241,48 +241,26 @@ app.get("/pessoas/:usuarioId",async function(req, res) {
   }
   res.json(resultado);
 })
-
-app.get("/pessoas/nome/:usuarioId", function (req, res) {
-  var sql = "SELECT * FROM pessoas WHERE name = ? AND usuarioId = ?";
-  var values = [req.params.name, req.params.usuarioId];
-  con.query(sql, values, function (err, result) {
-    if (err) throw err;
-    if (result.length == 0) {
-      res.status(404).send({});
-    } else {
-      res.send(result);
-    }
-  });
-});
-app.get("/pessoas/:id", function (req, res) {
-    var sql = "SELECT * FROM pessoas WHERE id = ? "
-    var values = [req.params.id]
-    con.query(sql, values, function (err, result) {
-        if (err) throw err;
-        if (result.length == 0) {
-            res.status(404).send({})
-        } else {
-            res.send(result)
-        }
-    });
+app.get("/pessoas/name/:usuarioId",async function(req, res) {
+  const resultado = await pessoas.Pessoas.findAll({
+      where:{ name:req.params.name,
+      usuarioId:req.params.usuarioId}
+  })
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
 })
-
-app.post("/pessoas/", jsonParser, function (req, res) {
-    var sql = "INSERT INTO pessoas (name, telefone, cidade, estado, usuarioId) VALUES (?,?,?,?,?)";
-    var values = [req.body.name, req.body.telefone, req.body.cidade, req.body.estado, req.body.usuarioId]
-    con.query(sql, values, function (err, result) {
-        if (err) throw err;
-        const novaPessoa = {
-            id: result.insertId,
-            name: req.body.name,
-            telefone: req.body.telefone,
-            cidade: req.body.cidade,
-            estado: req.body.estado,
-            usuarioId:req.body.usuarioId
-        };
-        res.send(novaPessoa);
-    });
-});
+app.post("/pessoas/",async function(req,res){
+  const resultado = await pessoa.pessoa.create({
+      name:req.body.name,
+      telefone:req.body.telefone,
+      cidade:req.body.cidade,
+      estado:req.body.estado,
+      usuarioId:req.body.usuarioId
+  })
+  res.json(resultado)
+})
 
 app.put("/pessoas/:id",jsonParser, function(req,res){
     var sql = "UPDATE pessoas SET name = ?, telefone = ?, cidade = ?, estado =?, usuarioId=? WHERE id = ?";
