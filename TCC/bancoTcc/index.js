@@ -19,7 +19,7 @@ const app2 = express2();
 
 app.listen(3005)
 app.use(express.json())
-const portaServidor = process.env.PORT || 3004;
+const portaServidor = process.env.PORT || 3306;
 app2.use(express2.json())
 app2.use(cookieParser())
 banco.conexao.sync( function(){
