@@ -6,7 +6,7 @@ const conexao = new sequelize(
     process.env.DB_USER,
     process.env.DB_PASSWORD,
     process.env.DB_HOST,
-    {dialect:"postgress"}
+    {dialect:"postgres"}
 )
 
 module.exports = { conexao }
