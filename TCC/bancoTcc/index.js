@@ -34,12 +34,12 @@ app.listen(PORTA,function(){
   console.log("Servidor rodando na porta " + PORTA );
 })
 
-var con = mysql.createConnection({
-  host: "localhost",
-    user: "fabioRoger",
-    password: "Abcd&123",
-    database: "bancoTcc"
-});
+// var con = mysql.createConnection({
+//   host: "localhost",
+//     user: "fabioRoger",
+//     password: "Abcd&123",
+//     database: "bancoTcc"
+// });
 
 // con.connect(function (err) {
 //     if (err) throw err;
@@ -232,6 +232,16 @@ app.put("/auth/user/:id", checkToken,jsonParser, async (req, res) => {
 });
 
 //Cadastro e listagem de pessoas
+app.get("/pessoas/:usuarioId",async function(req, res) {
+  const resultado = await pessoas.Pessoas.findAll({
+      where:{ usuarioId:req.params.usuarioId }
+  })
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
+})
+
 app.get("/pessoas/:usuarioId", function (req, res) {
     var sql = "SELECT * FROM pessoas WHERE usuarioId=?;"
     var values = [req.params.usuarioId]
