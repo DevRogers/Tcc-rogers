@@ -1,6 +1,6 @@
-const URL = "http://localhost:3005/historicos/";
-const URL1 = "http://localhost:3005/historicos/total/";
-const URL_USER = "http://localhost:3005/user/"
+const URL = "https://despachantemoser.onrender.com/historicos/";
+const URL1 = "https://despachantemoser.onrender.com/historicos/total/";
+const URL_USER = "https://despachantemoser.onrender.com/user/"
 
 enviaGET(localStorage.getItem('id'))
 

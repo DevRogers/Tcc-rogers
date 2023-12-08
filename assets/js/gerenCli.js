@@ -1,4 +1,4 @@
-const URL = "http://localhost:3005/pessoas/"
+const URL = "https://despachantemoser.onrender.com/pessoas/"
 
 var pessoaId = null
 lerParametros()

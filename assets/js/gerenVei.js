@@ -1,4 +1,4 @@
-const URL = "http://localhost:3005/veiculos/";
+const URL = "https://despachantemoser.onrender.com/veiculos/";
 
 var idVeiculo = null
 var pessoaId = null

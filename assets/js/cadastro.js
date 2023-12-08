@@ -1,4 +1,4 @@
-const URL_AUTH = "http://localhost:3005/auth/register/"
+const URL_AUTH = "https://despachantemoser.onrender.com/auth/register/"
 
 var botaoCadastrar = document.getElementById("botaoCadastrar")
 botaoCadastrar.addEventListener("click",()=>{

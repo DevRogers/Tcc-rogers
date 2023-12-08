@@ -1,5 +1,5 @@
-const URL2 = "http://localhost:3005/pessoas/";
-const URL3 = "http://localhost:3005/veiculos/";
+const URL2 = "https://despachantemoser.onrender.com/pessoas/";
+const URL3 = "https://despachantemoser.onrender.com/veiculos/";
 var pessoasData = {};
 var veiculosData = {};
 var usuarioId = localStorage.getItem("id");
@@ -97,7 +97,7 @@ placaSelect.addEventListener("change", function() {
 //fim pesquisa placa por pessoa
 
 //Inicio sistema financeiro
-const URL = "http://localhost:3005/historicos/";
+const URL = "https://despachantemoser.onrender.com/historicos/";
 idHistorico = null;
 
 var botaoAdicionar = document.getElementById("btnNew")
