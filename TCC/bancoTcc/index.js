@@ -307,7 +307,9 @@ app.delete("/pessoas/:id",async function(req,res){
 // //Cadastro do Financeiro
 app.get("/historicos/:usuarioId", async function(req, res) {
   try {
-    const resultado = await historico.Historicos.findByPk(req.params.usuarioId);
+    const resultado = await historico.Historicos.findAll({
+      where: {usuarioId:req.params.usuarioId}
+    });
 
     if (resultado === null) {
       res.status(404).send({});
