@@ -267,201 +267,168 @@ app.post("/pessoas/",async function(req,res){
   res.json(resultado)
 })
 
-// app.put("/pessoas/:id",jsonParser, function(req,res){
-//     var sql = "UPDATE pessoas SET name = ?, telefone = ?, cidade = ?, estado =?, usuarioId=? WHERE id = ?";
-//     var values = [req.body.name, req.body.telefone, req.body.cidade, req.body.estado, req.body.usuarioId, req.params.id]
-//     con.query(sql, values, function (err, result) {
-//       if (err) throw err;
-//       if( result.affectedRows == 0 ){
-//         res.status( 404 ).send( {} )
-//       }else{
-//         const novaPessoa = {
-//           id: req.params.id,
-//           name: req.body.name,
-//           telefone:req.body.telefone,
-//           cidade: req.body.cidade,
-//           estado: req.body.estado,
-//           usuarioId:req.body.usuarioId
-//         };
-//         res.send( novaPessoa );
-//       }
-//     });
-//   });
-
-//   app.delete("/pessoas/:id", function(req, res){
-//     var sql = "DELETE FROM pessoas WHERE id = ?";
-//     var values = [req.params.id]
-//     con.query(sql, values, function (err, result) {
-//       if (err) throw err;
-//        if( result.affectedRows == 0 ){
-//         res.status( 404 ).send( {} );
-//       }else{
-//         res.status(204).send( {} );
-//       }
-//     });
-    
-//   });
+app.put("/pessoas/:id",async function(req,res){
+  const resultado = await pessoas.Pessoas.update({
+    name:req.body.name,
+    telefone:req.body.telefone,
+    cidade:req.body.cidade,
+    estado:req.body.estado,
+    usuarioId:req.body.usuarioId
+  },{
+      where:{id: req.params.id}
+  })
+  if( resultado == 0){
+      res.status(404).send({})
+  }else{
+      res.json( await pessoas.Pessoas.findByPk(req.params.id))
+  }
+})
+app.delete("/pessoas/:id",async function(req,res){
+  const resultado = await pessoas.Pessoas.destroy({
+      where:{
+          id:req.params.id
+      }
+  })
+  if( resultado == 0 ){
+      res.status(404).send({})
+  }else{
+      res.status(204).send({})
+  }
+})
 // //Fim do Cadastro e listagem de pessoas
 
 // //Cadastro do Financeiro
-// app.get("/historicos/:usuarioId", function (req,res){
-//   var sql = "SELECT * FROM historicos WHERE usuarioId=? ORDER BY id DESC;"
-//   var values = [req.params.usuarioId]
-//   con.query(sql, values, function (err, result, fields) {
-//     if (err) throw err;
-//     res.send( result )
-//   })
-// })
-// app.get("/historicos/total/:usuarioId", function (req,res){
-//   var sql = "SELECT count(id) FROM historicos WHERE usuarioId=?"
-//   var values = [req.params.usuarioId]
-//   con.query(sql,values, function (err, result, fields) {
-//     if (err) throw err;
-//     res.send( result )
-//   })
-// })
-// app.post("/historicos/", jsonParser, function( req, res ){
-//   var sql = "INSERT INTO historicos (nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId) VALUES (?,?,?,?,?,?,?,?,?,?)";
-//   var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo, req.body.entrada, req.body.saida, req.body.usuarioId]
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//     const novoHistorico = {
-//       id: result.insertId,
-//       nome: req.body.nome,
-//       valor:req.body.valor,
-//       descricao:req.body.descricao,
-//       data:req.body.data,
-//       veiculo:req.body.veiculo,
-//       placa:req.body.placa,
-//       tipo:req.body.tipo,
-//       entrada:req.body.entrada,
-//       saida:req.body.saida,
-//       usuarioId:req.body.usuarioId
-//     };
-//     res.send( novoHistorico );
-//   });
-// });
+app.get("/historicos/:usuarioId",async function(req, res) {
+  const resultado = await historico.Historicos.findByPk(req.params.usuarioId)
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
+})
 
-// app.put("/historicos/:id",jsonParser, function(req,res){
-//   var sql = "UPDATE historicos SET nome = ?, valor = ?, descricao = ?, data = ?, veiculo = ?, placa=?, tipo = ?, entrada = ?, saida = ?, usuarioId=? WHERE id = ?";
-//   var values = [req.body.nome, req.body.valor, req.body.descricao, req.body.data, req.body.veiculo, req.body.placa, req.body.tipo,req.body.entrada,req.body.saida, req.body.usuarioId, req.params.id]
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//     if( result.affectedRows == 0 ){
-//       res.status( 404 ).send( {} )
-//     }else{
-//       const novoHistorico = {
-//         id: req.params.id,
-//         nome: req.body.nome,
-//         valor:req.body.valor,
-//         descricao:req.body.descricao,
-//         data:req.body.data,
-//         veiculo:req.body.veiculo,
-//         placa:req.body.placa,
-//         tipo:req.body.tipo,
-//         entrada:req.body.entrada,
-//         saida:req.body.saida,
-//         usuarioId:req.body.usuarioId
-//       };
-//       res.send( novoHistorico );
-//     }
-//   });
-// });
+app.get("/historicos/total/:usuarioId",async function(req, res) {
+  const resultado = await historico.Historicos.findAll({
+      where:{ usuarioId:req.params.usuarioId }
+  })
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
+})
 
-// app.delete("/historicos/:id", jsonParser, function(req, res){
-//   var sql = "DELETE FROM historicos WHERE id = ?";
-//   var values = [req.params.id]
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//      if( result.affectedRows == 0 ){
-//       res.status( 404 ).send( {} );
-//     }else{
-//       res.status(204).send( {} );
-//     }
-//   });
-  
-// });
+app.post("/historicos/",async function(req,res){
+  const resultado = await historico.Historicos.create({
+          nome: req.body.nome,
+          valor:req.body.valor,
+          descricao:req.body.descricao,
+          data:req.body.data,
+          veiculo:req.body.veiculo,
+          placa:req.body.placa,
+          tipo:req.body.tipo,
+          entrada:req.body.entrada,
+          saida:req.body.saida,
+          usuarioId:req.body.usuarioId
+  })
+  res.json(resultado)
+})
+app.put("/historicos/:id",async function(req,res){
+  const resultado = await historico.Historicos.update({
+    nome: req.body.nome,
+    valor:req.body.valor,
+    descricao:req.body.descricao,
+    data:req.body.data,
+    veiculo:req.body.veiculo,
+    placa:req.body.placa,
+    tipo:req.body.tipo,
+    entrada:req.body.entrada,
+    saida:req.body.saida,
+    usuarioId:req.body.usuarioId
+  },{
+      where:{id: req.params.id}
+  })
+  if( resultado == 0){
+      res.status(404).send({})
+  }else{
+      res.json( await historico.Historicos.findByPk(req.params.id))
+  }
+})
+app.delete("/historicos/:id",async function(req,res){
+  const resultado = await historico.Historicos.destroy({
+      where:{
+          id:req.params.id
+      }
+  })
+  if( resultado == 0 ){
+      res.status(404).send({})
+  }else{
+      res.status(204).send({})
+  }
+})
 // //Fim cadastro do financeiro
 
 // //Inicio cadastro de placas
-// app.get("/veiculos/:pessoaId/:usuarioId", function (req, res) {
-//   var sql = "SELECT * FROM veiculos WHERE pessoaId=? AND usuarioId=?;";
-//   var values = [req.params.pessoaId, req.params.usuarioId];
-//   con.query(sql, values, function (err, result, fields) {
-//     if (err) throw err;
-//     res.send(result);
-//   });
-// });
-// app.get("/veiculos/:usuarioId", function (req, res) {
-//   var sql = "SELECT * FROM veiculos WHERE usuarioId=?;";
-//   var values = [req.params.usuarioId];
-//   con.query(sql, values, function (err, result, fields) {
-//     if (err) throw err;
-//     res.send(result);
-//   });
-// });
-
-// app.get("/veiculos/", function (req, res) {
-//   var sql = "SELECT * FROM veiculos;"
-//   con.query(sql, function (err, result, fields) {
-//       if (err) throw err;
-//       res.send(result)
-//   })
-// })
-
-// app.post("/veiculos/", jsonParser, function( req, res ){
-//   var sql = "INSERT INTO veiculos (placa, renavam, modelo, cidade, estado, pessoaId, usuarioId) VALUES (?,?,?,?,?,?,?)";
-//   var values = [req.body.placa, req.body.renavam, req.body.modelo,req.body.cidade, req.body.estado, req.body.pessoaId, req.body.usuarioId]
-//   console.log(values);
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//     const novaPlaca = {
-//       id: result.insertId,
-//       placa:req.body.placa,
-//       renavam:req.body.renavam,
-//       modelo:req.body.modelo,
-//       cidade:req.body.cidade,
-//       estado:req.body.estado,
-//       pessoaId:req.body.pessoaId,
-//       usuarioId:req.body.usuarioId
-//     };
-//     res.send( novaPlaca );
-//   });
-// });
-
-// app.put("/veiculos/:id",jsonParser, function(req,res){
-//   var sql = "UPDATE veiculos SET placa = ?, renavam = ?, modelo = ?,cidade = ?, estado = ?, pessoaId = ?, usuarioId=? WHERE id = ?";
-//   var values = [req.body.placa, req.body.renavam, req.body.modelo, req.body.cidade, req.body.estado, req.body.pessoaId, req.body.usuarioId, req.params.id]
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//     if( result.affectedRows == 0 ){
-//       res.status( 404 ).send( {} )
-//     }else{
-//       const novaPlaca = {
-//         id: req.params.id,
-//         placa:req.body.placa,
-//         renavam:req.body.renavam,
-//         modelo:req.body.modelo,
-//         cidade:req.body.cidade,
-//         estado:req.body.estado,
-//         pessoaId:req.body.pessoaId,
-//         usuarioId:req.body.usuarioId
-//       };
-//       res.send( novaPlaca );
-//     }
-//   });
-// });
-
-// app.delete("/veiculos/:id", jsonParser, function(req, res){
-//   var sql = "DELETE FROM veiculos WHERE id = ?";
-//   var values = [req.params.id]
-//   con.query(sql, values, function (err, result) {
-//     if (err) throw err;
-//      if( result.affectedRows == 0 ){
-//       res.status( 404 ).send( {} );
-//     }else{
-//       res.status(204).send( {} );
-//     }
-//   });
-  
-// });
+app.get("/veiculos/:pessoaId/:usuarioId",async function(req, res) {
+  const resultado = await veiculos.Veiculos.findAll({
+      where:{ pessoaId:req.params.pessoaId,
+      usuarioId:req.params.usuarioId}
+  })
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
+})
+app.get("/veiculos/:usuarioId",async function(req, res) {
+  const resultado = await veiculos.Veiculos.findAll({
+      where:{usuarioId:req.params.usuarioId}
+  })
+  if( resultado == null ){
+      res.status(404).send({})
+  }
+  res.json(resultado);
+})
+app.get("/veiculos/",async function(req, res) {
+  const resultado = await veiculos.Veiculos.findAll()
+  res.json(resultado);
+})
+app.post("/veiculos/",async function(req,res){
+  const resultado = await veiculos.Veiculos.create({
+    placa:req.body.placa,
+          renavam:req.body.renavam,
+          modelo:req.body.modelo,
+          cidade:req.body.cidade,
+          estado:req.body.estado,
+          pessoaId:req.body.pessoaId,
+          usuarioId:req.body.usuarioId
+  })
+  res.json(resultado)
+})
+app.put("/veiculos/:id",async function(req,res){
+  const resultado = await veiculos.Veiculos.update({
+    placa:req.body.placa,
+    renavam:req.body.renavam,
+    modelo:req.body.modelo,
+    cidade:req.body.cidade,
+    estado:req.body.estado,
+    pessoaId:req.body.pessoaId,
+    usuarioId:req.body.usuarioId
+  },{
+      where:{id: req.params.id}
+  })
+  if( resultado == 0){
+      res.status(404).send({})
+  }else{
+      res.json( await veiculos.Veiculos.findByPk(req.params.id))
+  }
+})
+app.delete("/veiculos/:id",async function(req,res){
+  const resultado = await veiculos.Veiculos.destroy({
+      where:{
+          id:req.params.id
+      }
+  })
+  if( resultado == 0 ){
+      res.status(404).send({})
+  }else{
+      res.status(204).send({})
+  }
+})
