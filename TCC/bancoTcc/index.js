@@ -256,16 +256,23 @@ app.get("/pessoas/name/:usuarioId",async function(req, res) {
   }
   res.json(resultado);
 })
-app.post("/pessoas/",async function(req,res){
-  const resultado = await pessoas.Pessoas.create({
-      name:req.body.name,
-      telefone:req.body.telefone,
-      cidade:req.body.cidade,
-      estado:req.body.estado,
-      usuarioId:req.body.usuarioId
-  })
-  res.json(resultado)
-})
+app.post("/pessoas/", async function (req, res) {
+  try {
+      const resultado = await pessoas.Pessoas.create({
+          name: req.body.name,
+          telefone: req.body.telefone,
+          cidade: req.body.cidade,
+          estado: req.body.estado,
+          usuarioId: req.body.usuarioId,
+      });
+
+      // Send a success status and the result
+      res.status(200).json({ resultado, redirect: "listarCli.html" });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.put("/pessoas/:id",async function(req,res){
   const resultado = await pessoas.Pessoas.update({
@@ -298,13 +305,21 @@ app.delete("/pessoas/:id",async function(req,res){
 // //Fim do Cadastro e listagem de pessoas
 
 // //Cadastro do Financeiro
-app.get("/historicos/:usuarioId",async function(req, res) {
-  const resultado = await historico.Historicos.findByPk(req.params.usuarioId)
-  if( resultado == null ){
-      res.status(404).send({})
+app.get("/historicos/:usuarioId", async function(req, res) {
+  try {
+    const resultado = await historico.Historicos.findByPk(req.params.usuarioId);
+
+    if (resultado === null) {
+      res.status(404).send({});
+    } else {
+      res.json(resultado);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Erro interno do servidor" });
   }
-  res.json(resultado);
-})
+});
+
 
 app.get("/historicos/total/:usuarioId",async function(req, res) {
   const resultado = await historico.Historicos.findAll({
@@ -312,8 +327,9 @@ app.get("/historicos/total/:usuarioId",async function(req, res) {
   })
   if( resultado == null ){
       res.status(404).send({})
+  }else{
+    res.json(resultado);
   }
-  res.json(resultado);
 })
 
 app.post("/historicos/",async function(req,res){
@@ -390,18 +406,25 @@ app.get("/veiculos/",async function(req, res) {
   const resultado = await veiculos.Veiculos.findAll()
   res.json(resultado);
 })
-app.post("/veiculos/",async function(req,res){
-  const resultado = await veiculos.Veiculos.create({
-    placa:req.body.placa,
-          renavam:req.body.renavam,
-          modelo:req.body.modelo,
-          cidade:req.body.cidade,
-          estado:req.body.estado,
-          pessoaId:req.body.pessoaId,
-          usuarioId:req.body.usuarioId
-  })
-  res.json(resultado)
-})
+app.post("/veiculos/", async function (req, res) {
+  try {
+    const resultado = await veiculos.Veiculos.create({
+      placa: req.body.placa,
+      renavam: req.body.renavam,
+      modelo: req.body.modelo,
+      cidade: req.body.cidade,
+      estado: req.body.estado,
+      pessoaId: req.body.pessoaId,
+      usuarioId: req.body.usuarioId,
+    });
+
+    // Send a success status and the result
+    res.status(200).json({ resultado, pessoaId: req.body.pessoaId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.put("/veiculos/:id",async function(req,res){
   const resultado = await veiculos.Veiculos.update({
     placa:req.body.placa,

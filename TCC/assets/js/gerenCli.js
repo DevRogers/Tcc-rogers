@@ -74,11 +74,15 @@ function enviaPOST( name, TelefonePessoa, cidadePessoa, estadoPessoa, usuarioId 
     fetch(URL,header)
     .then(function(response){
         return response.json()
-    }).then(function(data){
-        window.location.href = 'listarCli.html';
-    }).catch(function(){
-        alert("Erro")
-    })
+    }).then(function (data) {
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        } else {
+            alert("Erro");
+        }
+    }).catch(function () {
+        alert("Erro");
+    });
 }
 function enviaPUT( id,name, TelefonePessoa, cidadePessoa, estadoPessoa, usuarioId){
     var header = {

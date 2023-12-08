@@ -118,12 +118,16 @@ function enviaPOST( placa, renavam, modelo, cidade, estado, pessoaId, usuarioId 
     fetch(URL,header)
     .then(function(response){
         return response.json()
-    }).then(function(data){
-        window.location.href = "listarVei.html?pessoaId="+pessoaId+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
-    }).catch(function(error){
+    }).then(function (data) {
+        if (data.pessoaId) {
+            window.location.href = "listarVei.html?pessoaId="+pessoaId+"&nomePessoa="+nomePessoa+"&telefonePessoa="+telefonePessoa+"&cidadePessoa="+cidadePessoa+"&estadoPessoa="+estadoPessoa;
+        } else {
+            alert('Ocorreu um erro na inserção do registro!');
+        }
+    }).catch(function (error) {
         console.log(error);
         alert('Ocorreu um erro na inserção do registro!');
-    })
+    });
 }
 
 const inputEstado = document.getElementById('inputEstado');
