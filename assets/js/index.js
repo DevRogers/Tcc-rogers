@@ -51,7 +51,7 @@ fetch(URL1 + usuarioId)
     return response.json();
   })
   .then(data => {
-    const totalCount = data[0]['count(id)'];
+    const totalCount = data.length;
     var divCad = document.getElementById("totalCadastro")
     divCad.innerText = totalCount;
   })
