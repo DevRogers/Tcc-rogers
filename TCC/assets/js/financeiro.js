@@ -5,7 +5,7 @@ var veiculosData = {};
 var usuarioId = localStorage.getItem("id");
 // lendo dados URL2
 lerPessoas();
-
+var listaHistorico = [];
 function lerPessoas() {
   fetch(URL2 + usuarioId)
     .then(response => response.json())
@@ -215,7 +215,6 @@ function enviaPUT(id, nome, valor, descricao, data, veiculo, placa, tipo, entrad
     });
 }
 
-var listaHistorico = [];
 function criarLinhaHistorico(historicos){
   const formattedDate = formatDate(historicos.data);
   const seta = historicos.tipo === 'Entrada' ? '<img src="assets/images/setVerde.png" class="seta" alt="Entrada">' : '<img src="assets/images/setVermelha.png" class="seta" alt="Saída">';
@@ -271,7 +270,7 @@ function calcularEExibirValor() {
   for (let i = 0; i < listaHistorico.length; i++) {
     const historico = listaHistorico[i];
     const valor = parseFloat(historico.valor);
-  
+
     const a = historico.tipo;
     if (a === "Entrada") {
       entrada += valor;
@@ -295,6 +294,7 @@ function calcularEExibirValor() {
 async function atualizarListaHistorico() {
   try {
     const dadosDoServidor = await obterDadosDoServidor();
+    console.log(dadosDoServidor);
     listaHistorico = dadosDoServidor;
     calcularEExibirValor();
   } catch (error) {
@@ -329,8 +329,9 @@ function adicionarHistorico() {
   tabelaHistorico.innerHTML += iniciarTabela();
   
   for (let i = 0; i < listaHistorico.length; i++) {
-    const historico = listaHistorico[i];
-    tabelaHistorico.innerHTML += criarLinhaHistorico(historico);
+    const historicos = listaHistorico[i];
+    tabelaHistorico.innerHTML += criarLinhaHistorico(historicos);
+    console.log(historicos);
   }
   cadastrarEventosLapis();
   cadastrarEventosLixeira();
