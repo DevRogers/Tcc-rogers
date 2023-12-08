@@ -5,7 +5,6 @@ var veiculosData = {};
 var usuarioId = localStorage.getItem("id");
 // lendo dados URL2
 lerPessoas();
-var listaHistorico = [];
 function lerPessoas() {
   fetch(URL2 + usuarioId)
     .then(response => response.json())
@@ -139,7 +138,7 @@ botaoAdicionar.addEventListener("click", function(){
     document.getElementById("placa").value = "";
     document.getElementById("tipo").value = "";
 })
-
+var listaHistorico = [];
 function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, saida, usuarioId) {
   var header = {
     method:"POST",
@@ -165,7 +164,10 @@ function enviaPOST(nome, valor, descricao, data, veiculo, placa, tipo, entrada, 
       return response.json();
     })
     .then(function (data) {
-      listaHistorico.push(data); // Add the new data to the list
+      if (!Array.isArray(listaHistorico)) {
+        listaHistorico = []; // Inicialize como um array vazio se não for um array
+      }
+      listaHistorico.push(data);
       adicionarHistorico(); // Update the table with the new data
       calcularEExibirValor(); // Recalculate and display the values
       setTimeout(function() {
@@ -294,7 +296,6 @@ function calcularEExibirValor() {
 async function atualizarListaHistorico() {
   try {
     const dadosDoServidor = await obterDadosDoServidor();
-    console.log(dadosDoServidor);
     listaHistorico = dadosDoServidor;
     calcularEExibirValor();
   } catch (error) {
@@ -450,9 +451,7 @@ async function fetchData() {
       throw new Error("Failed to fetch data.");
     }
     const data = await response.json();
-
-    // Certifique-se de que data é um array
-    return Array.isArray(data) ? data : [data];
+    return data;
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
